@@ -35,4 +35,17 @@ export class AccessControlModel {
     return addedProject;
   };
 
+  async getAllProjects() {   
+    const projectsQuery = `SELECT * FROM "Project";`;
+    const {rows} = await this.db.query(projectsQuery);
+    const allProjects = rows.map(row => ({...row }));
+    return allProjects;
+  };
+
+  async deleteProject(id) { 
+   
+    const deleteProjectQuery = `DELETE FROM "Project" WHERE "id" = $1`;
+    await this.db.query(deleteProjectQuery, [id]);
+    return true;
+  };
 };

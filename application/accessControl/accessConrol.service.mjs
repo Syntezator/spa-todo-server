@@ -22,17 +22,28 @@ const addProject = async (deps, projectToAdd) => {
   const addedProject = await accessControlModel.addProject(projectToAdd); 
   return addedProject;
 };
-
-/**
- * @function initAccessControlService
- * @param {Deps} deps
- * @returns {AccessControlService} 
- */
+const getAllProjects = async (deps) => {
+  const {models: {accessControlModel}} = deps;
+  const allProjects = await accessControlModel.getAllProjects(); 
+  return allProjects;
+};
+const deleteProject = async (deps, id) => {
+  const {models: {accessControlModel}} = deps;
+  const deletedProject = await accessControlModel.deleteProject(id); 
+  return deletedProject;
+};
+// /**
+//  * @function initAccessControlService
+//  * @param {Deps} deps
+//  * @returns {AccessControlService} 
+//  */
 
 export const initAccessControlService = (deps) => ({
   metadata: {events: {emit: ['sendEmail']}},
   comands: {
     addProject: partial(addProject, deps),
+    getAllProjects: partial(getAllProjects, deps),
+    deleteProject: partial(deleteProject, deps),
   }
 });
 
