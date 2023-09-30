@@ -22,15 +22,47 @@ const addProject = async (deps, projectToAdd) => {
   const addedProject = await accessControlModel.addProject(projectToAdd); 
   return addedProject;
 };
+
 const getAllProjects = async (deps) => {
   const {models: {accessControlModel}} = deps;
   const allProjects = await accessControlModel.getAllProjects(); 
   return allProjects;
 };
+
 const deleteProject = async (deps, id) => {
   const {models: {accessControlModel}} = deps;
   const deletedProject = await accessControlModel.deleteProject(id); 
   return deletedProject;
+};
+
+const addTask = async (deps, taskToAdd) => {
+  const {models: {accessControlModel}} = deps;
+  const addedTask = await accessControlModel.addTask(taskToAdd); 
+  return addedTask;
+};
+
+const getAllTasks = async (deps) => {
+  const {models: {accessControlModel}} = deps;
+  const allTasks = await accessControlModel.getAllTasks(); 
+  return allTasks;
+};
+
+const getTaskById = async (deps, id) => {
+  const {models: {accessControlModel}} = deps;
+  const taskById = await accessControlModel.getTaskById(id); 
+  return taskById;
+};
+
+const deleteTask = async (deps, id) => {
+  const {models: {accessControlModel}} = deps;
+  const deletedTask = await accessControlModel.deleteTask(id); 
+  return deletedTask;
+};
+
+const updateTask = async (deps, taskToUpdate, id) => {
+  const {models: {accessControlModel}} = deps;
+  const updatedTask = await accessControlModel.updateTask(taskToUpdate, id); 
+  return updatedTask;
 };
 // /**
 //  * @function initAccessControlService
@@ -44,6 +76,11 @@ export const initAccessControlService = (deps) => ({
     addProject: partial(addProject, deps),
     getAllProjects: partial(getAllProjects, deps),
     deleteProject: partial(deleteProject, deps),
+    addTask: partial(addTask, deps),
+    getAllTasks: partial(getAllTasks, deps),
+    deleteTask: partial(deleteTask, deps),
+    updateTask: partial(updateTask, deps),
+    getTaskById: partial(getTaskById, deps),
   }
 });
 
