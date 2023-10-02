@@ -25,17 +25,17 @@ CREATE TYPE status_type AS ENUM (
 
 CREATE TABLE "Task" (
   "id" BIGINT GENERATED ALWAYS AS IDENTITY,
-  "number" VARCHAR NOT NULL,
+  "number" BIGINT NOT NULL,
   "title" VARCHAR NOT NULL,
   "description" VARCHAR,
   "start" DATE DEFAULT CURRENT_DATE,
   "time" VARCHAR,
   "end" VARCHAR,
-  "pryority" VARCHAR NOT NULL,
+  "priority" VARCHAR NOT NULL,
   "file" BYTEA,
   "status" status_type,
   "task" task_type,
-  "projectId" VARCHAR NOT NULL
+  "projectId" BIGINT NOT NULL
 );
 
 /*********************************
@@ -45,14 +45,9 @@ CREATE TABLE "Task" (
 CREATE TABLE "Comment" (
   "id" BIGINT GENERATED ALWAYS AS IDENTITY,
   "title" VARCHAR NOT NULL,
-  "taskId" VARCHAR NOT NULL
+  "taskId" BIGINT NOT NULL
 );
 
-/*********************************
-  Insert records for Project
-*********************************/
 
-INSERT INTO "Project" ("id", "title", "description")
-VALUES ('1', 'To do SPA', 'Test task for front-end development');
 
 

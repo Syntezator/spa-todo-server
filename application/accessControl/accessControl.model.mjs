@@ -49,13 +49,13 @@ export class AccessControlModel {
   };
 
   async addTask(taskToAdd) {
-    const {number, title, description, pryority, status, task, projectId} = taskToAdd;
+    const {number, title, description, priority, status, task, projectId} = taskToAdd;
     const addTaskQuery = `
       INSERT INTO "Task" (
         "number",
         "title",
         "description",
-        "pryority", 
+        "priority", 
         "status", 
         "task", 
         "projectId"
@@ -66,16 +66,16 @@ export class AccessControlModel {
 
     const {rows: [addedTask]} = await this.db.query(
       addTaskQuery, 
-      [number, title, description, pryority, status, task, projectId],
+      [number, title, description, priority, status, task, projectId],
     );
 
     return addedTask;
   };
 
-  async getAllTasks() {   
-    const tasksQuery = `SELECT * FROM "Task";`;
-    const {rows} = await this.db.query(tasksQuery);
-    const allTasks = rows.map(row => ({...row }));
+  async getAllTasks(projectId) {   
+    const tasksQuery = `SELECT * FROM "Task" WHERE "projectId" = $1;`;
+   
+    const {rows: allTasks} = await this.db.query(tasksQuery, [projectId]);
     return allTasks;
   };
 
@@ -88,23 +88,53 @@ export class AccessControlModel {
   async deleteTask(id) {    
     const deleteTaskQuery = `DELETE FROM "Task" WHERE "id" = $1`;
     await this.db.query(deleteTaskQuery, [id]);
+
+    const deleteCommentQuery = `DELETE FROM "Comment" WHERE "taskId" = $1`;
+    await this.db.query(deleteCommentQuery, [id]);
+
     return true;
   };
 
   async updateTask(taskToUpdate, id) {    
-    const {title, description, pryority, status, task} = taskToUpdate;
+    const {title, description, priority, status, task} = taskToUpdate;
     const updatedTaskQuery = `
       UPDATE "Task"
-      SET "title" = $1, "description" = $2, "pryority" = $3, "status" = $4, "task" = $5
+      SET "title" = $1, "description" = $2, "priority" = $3, "status" = $4, "task" = $5
       WHERE "id" = $6
       RETURNING *;
   `;
 
     const { rows: [updatedTask] } = await this.db.query(
       updatedTaskQuery,
-      [title, description, pryority, status, task, id]
+      [title, description, priority, status, task, id]
     );
 
     return updatedTask;
+  };
+
+  async addComment(commentToAdd) {
+    const {title, taskId} = commentToAdd;
+    const addCommentQuery = `
+      INSERT INTO "Comment" (
+        "title",
+        "taskId"
+      ) 
+      VALUES ($1, $2)
+      RETURNING *;
+    `;
+
+    const {rows: [addedComment]} = await this.db.query(
+      addCommentQuery, 
+      [title, taskId],
+    );
+    
+    return addedComment;
+  };
+
+  async getAllComments(taskId) {   
+    const commentQuery = `SELECT * FROM "Comment" WHERE "taskId" = $1;`;
+   
+    const {rows: allTasks} = await this.db.query(commentQuery, [taskId]);
+    return allTasks;
   };
 };

@@ -71,12 +71,14 @@ export const initAccessControlController = (diContainer) => [
   },
   {
     method: 'GET',
-    url: '/tasks', 
+    url: '/tasks/:projectId', 
     handler: async (req, reply) => {
+      /** @type {*} */
+      const {projectId} = req.params;
       /** @type {*} */
       const {accessControlService} = diContainer;
       const {getAllTasks} = accessControlService.comands;
-      const tasks = await getAllTasks();
+      const tasks = await getAllTasks(projectId);
       reply.code(200).send(tasks);
     },
   },
@@ -120,6 +122,33 @@ export const initAccessControlController = (diContainer) => [
       const {updateTask} = accessControlService.comands;
       const updatedTask = await updateTask(taskToUpdate, id);
       reply.code(200).send({updatedTask});
+    },
+  },
+  {
+    method: 'POST',
+    url: '/comment/add',
+    handler: async (req, reply) => {
+      /** @type {*} */
+      const commentToAdd = req.body;
+      
+      const {accessControlService} = diContainer;
+      /** @type {*} */
+      const {addComment} = accessControlService.comands;
+      const addedComment = await addComment(commentToAdd);
+      reply.code(200).send({addedComment});
+    },   
+  },
+  {
+    method: 'GET',
+    url: '/comment/:taskId', 
+    handler: async (req, reply) => {
+      /** @type {*} */
+      const {taskId} = req.params;
+      /** @type {*} */
+      const {accessControlService} = diContainer;
+      const {getAllComments} = accessControlService.comands;
+      const comments = await getAllComments(taskId);
+      reply.code(200).send(comments);
     },
   },
 ];

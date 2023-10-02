@@ -41,10 +41,22 @@ const addTask = async (deps, taskToAdd) => {
   return addedTask;
 };
 
-const getAllTasks = async (deps) => {
+const addComment = async (deps, commentToAdd) => {
   const {models: {accessControlModel}} = deps;
-  const allTasks = await accessControlModel.getAllTasks(); 
+  const addedComment = await accessControlModel.addComment(commentToAdd); 
+  return addedComment;
+};
+
+const getAllTasks = async (deps, projectId) => {
+  const {models: {accessControlModel}} = deps;
+  const allTasks = await accessControlModel.getAllTasks(projectId); 
   return allTasks;
+};
+
+const getAllComments = async (deps, taskId) => {
+  const {models: {accessControlModel}} = deps;
+  const allComments = await accessControlModel.getAllComments(taskId); 
+  return allComments;
 };
 
 const getTaskById = async (deps, id) => {
@@ -81,6 +93,8 @@ export const initAccessControlService = (deps) => ({
     deleteTask: partial(deleteTask, deps),
     updateTask: partial(updateTask, deps),
     getTaskById: partial(getTaskById, deps),
+    addComment: partial(addComment, deps),
+    getAllComments: partial(getAllComments, deps),
   }
 });
 
